@@ -66,7 +66,7 @@ fn parse_tag<B: BufRead>(
             }
             Ok(Event::Text(ref e)) => {
                 children.insert(
-                    "_".to_owned(),
+                    TEXT_CHARACTER.to_string(),
                     Value::String(
                         e.unescape_and_decode(&reader)
                             .map_err(|e| Error::XmlQuickXmlError(e))?,
