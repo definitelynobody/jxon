@@ -6,6 +6,7 @@ edition = "2018"
 license = "GPL-3.0"
 homepage = "https://github.com/definitelynobody/jxon"
 repository = "https://github.com/definitelynobody/jxon"
+description = "Convert XML to a serde_json::Value and back quickly using quick-xml."
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
