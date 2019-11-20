@@ -2,7 +2,7 @@ pub mod error;
 mod to_json;
 mod to_xml;
 
-use error::Error;
+pub use error::Error;
 use std::str::from_utf8;
 pub use to_json::xml_to_json;
 pub use to_xml::json_to_xml;
