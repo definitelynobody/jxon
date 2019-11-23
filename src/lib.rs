@@ -1,3 +1,4 @@
+mod constants;
 mod error;
 mod to_json;
 mod to_xml;
@@ -6,10 +7,6 @@ pub use error::Error;
 use std::str::from_utf8;
 pub use to_json::xml_to_json;
 pub use to_xml::json_to_xml;
-
-pub const ATTRIBUTE_START_CHARACTER: char = '$';
-pub const TEXT_CHARACTER: char = '_';
-pub const DECL_STRING: &str = "#";
 
 fn bytes_to_string(bytes: &[u8]) -> Result<String, Error> {
     from_utf8(bytes)
