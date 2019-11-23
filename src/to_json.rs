@@ -65,13 +65,15 @@ fn parse_tag<B: BufRead>(
                 start_tag(e.name(), e.attributes(), Map::new())?;
             }
             Ok(Event::Text(ref e)) => {
-                children.insert(
-                    TEXT_CHARACTER.to_string(),
-                    Value::String(
-                        e.unescape_and_decode(&reader)
-                            .map_err(|e| Error::XmlQuickXmlError(e))?,
-                    ),
-                );
+                let string = e
+                    .unescape_and_decode(&reader)
+                    .map_err(|e| Error::XmlQuickXmlError(e))?;
+
+                if string.len() == 0 {
+                    continue;
+                }
+
+                children.insert(TEXT_CHARACTER.to_string(), Value::String(string));
             }
             Ok(Event::Comment(ref _e)) => {}
             Ok(Event::CData(ref _e)) => {}
@@ -127,6 +129,5 @@ fn parse_tag<B: BufRead>(
 pub fn xml_to_json(xml: &str) -> Result<Value, Error> {
     let mut buf = vec![];
     let mut reader = Reader::from_str(xml);
-    reader.trim_text(true);
     Ok(Value::Object(parse_tag(&mut reader, &mut buf, true)?))
 }

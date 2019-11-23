@@ -36,6 +36,15 @@ fn text() {
             }]
         }),
     );
+
+    check(
+        "<root> test </root>",
+        json!({
+            "root": [{
+                "_": " test "
+            }]
+        }),
+    );
 }
 
 #[test]
