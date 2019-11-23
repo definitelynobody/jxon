@@ -1,4 +1,4 @@
-pub mod error;
+mod error;
 mod to_json;
 mod to_xml;
 
