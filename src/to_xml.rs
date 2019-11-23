@@ -121,6 +121,8 @@ fn write_value(writer: &mut Writer<Cursor<Vec<u8>>>, value: Value) -> Result<(),
     Ok(())
 }
 
+/// Convert a JSON string to an XML string.
+/// The JSON provided must be compatible with the conventions used by the jxon crate.
 pub fn json_to_xml(json: &str, indent: Option<(u8, usize)>) -> Result<String, Error> {
     let mut writer = match indent {
         None => Writer::new(Cursor::new(Vec::new())),

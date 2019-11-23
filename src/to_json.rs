@@ -123,6 +123,7 @@ fn parse_tag<B: BufRead>(
     Ok(children)
 }
 
+/// Convert an XML string to a JSON value.
 pub fn xml_to_json(xml: &str) -> Result<Value, Error> {
     let mut buf = vec![];
     let mut reader = Reader::from_str(xml);
