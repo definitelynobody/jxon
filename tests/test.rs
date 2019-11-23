@@ -101,3 +101,45 @@ fn children() {
         }),
     );
 }
+
+#[test]
+fn decl() {
+    check(
+        r#"<?xml version="1.0"?><root/>"#,
+        json!({
+            "#": {
+                "version": "1.0"
+            },
+            "root": [
+                {}
+            ]
+        }),
+    );
+
+    check(
+        r#"<?xml version="1.0" encoding="UTF-8"?><root/>"#,
+        json!({
+            "#": {
+                "version": "1.0",
+                "encoding": "UTF-8"
+            },
+            "root": [
+                {}
+            ]
+        }),
+    );
+
+    check(
+        r#"<?xml version="1.0" encoding="UTF-8" standalone="no"?><root/>"#,
+        json!({
+            "#": {
+                "version": "1.0",
+                "encoding": "UTF-8",
+                "standalone": "no"
+            },
+            "root": [
+                {}
+            ]
+        }),
+    );
+}

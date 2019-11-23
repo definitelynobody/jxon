@@ -7,6 +7,10 @@ fn is_attribute_property_name(name: &str) -> bool {
     name.find(ATTRIBUTE_START_CHARACTER) == Some(0)
 }
 
+fn is_decl(name: &str) -> bool {
+    name == DECL_STRING
+}
+
 fn write_value(writer: &mut Writer<Cursor<Vec<u8>>>, value: Value) -> Result<(), Error> {
     match value {
         Value::Null => return Err(Error::JsonParseUnexpectedNull),
@@ -21,6 +25,33 @@ fn write_value(writer: &mut Writer<Cursor<Vec<u8>>>, value: Value) -> Result<(),
         Value::Object(map) => {
             for (key, value) in map {
                 if is_attribute_property_name(&key) {
+                    continue;
+                }
+
+                if is_decl(&key) {
+                    writer
+                        .write_event(Event::Decl(BytesDecl::new(
+                            value
+                                .get("version")
+                                .ok_or(Error::JsonParseDeclMissingVersion)?
+                                .as_str()
+                                .ok_or(Error::JsonParseInvalidDecl)?
+                                .as_bytes(),
+                            match value.get("encoding") {
+                                Some(v) => {
+                                    Some(v.as_str().ok_or(Error::JsonParseInvalidDecl)?.as_bytes())
+                                }
+                                None => None,
+                            },
+                            match value.get("standalone") {
+                                Some(v) => {
+                                    Some(v.as_str().ok_or(Error::JsonParseInvalidDecl)?.as_bytes())
+                                }
+                                None => None,
+                            },
+                        )))
+                        .map_err(|e| Error::XmlQuickXmlError(e))?;
+
                     continue;
                 }
 

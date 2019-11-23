@@ -75,7 +75,36 @@ fn parse_tag<B: BufRead>(
             }
             Ok(Event::Comment(ref _e)) => {}
             Ok(Event::CData(ref _e)) => {}
-            Ok(Event::Decl(ref _e)) => {}
+            Ok(Event::Decl(ref e)) => {
+                let mut map = Map::new();
+
+                map.insert(
+                    "version".to_string(),
+                    Value::String(bytes_to_string(
+                        &e.version().map_err(|e| Error::XmlQuickXmlError(e))?,
+                    )?),
+                );
+
+                if let Some(encoding) = e.encoding() {
+                    map.insert(
+                        "encoding".to_string(),
+                        Value::String(bytes_to_string(
+                            &encoding.map_err(|e| Error::XmlQuickXmlError(e))?,
+                        )?),
+                    );
+                }
+
+                if let Some(standalone) = e.standalone() {
+                    map.insert(
+                        "standalone".to_string(),
+                        Value::String(bytes_to_string(
+                            &standalone.map_err(|e| Error::XmlQuickXmlError(e))?,
+                        )?),
+                    );
+                }
+
+                children.insert(DECL_STRING.to_owned(), Value::Object(map));
+            }
             Ok(Event::PI(ref _e)) => {}
             Ok(Event::DocType(ref _e)) => {}
             Ok(Event::Eof) => {

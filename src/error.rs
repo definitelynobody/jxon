@@ -16,4 +16,6 @@ pub enum Error {
     JsonParseUnexpectedNull,
     JsonParseUnexpectedBool,
     JsonParseUnexpectedNumber,
+    JsonParseDeclMissingVersion,
+    JsonParseInvalidDecl,
 }
