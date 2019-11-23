@@ -45,6 +45,15 @@ fn text() {
             }]
         }),
     );
+
+    check(
+        r#"<root>"</root>"#,
+        json!({
+            "root": [{
+                "_": "\""
+            }]
+        }),
+    );
 }
 
 #[test]
