@@ -11,5 +11,5 @@ pub use to_xml::json_to_xml;
 fn bytes_to_string(bytes: &[u8]) -> Result<String, Error> {
     from_utf8(bytes)
         .map(|s| s.to_owned())
-        .map_err(|e| Error::XmlParseStringError(e))
+        .map_err(|e| Error::ParseStringError(e))
 }
