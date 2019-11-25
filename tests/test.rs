@@ -102,6 +102,17 @@ fn attributes() {
             ]
         }),
     );
+
+    check(
+        r#"<root Something="&amp;"/>"#,
+        json!({
+            "root": [
+                {
+                    "$Something": "&"
+                }
+            ]
+        }),
+    );
 }
 
 #[test]

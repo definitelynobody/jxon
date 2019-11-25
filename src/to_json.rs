@@ -32,7 +32,11 @@ fn parse_tag<B: BufRead>(
                             ATTRIBUTE_START_CHARACTER,
                             bytes_to_string(attribute.key)?
                         ),
-                        Value::String(bytes_to_string(&attribute.value)?),
+                        Value::String(bytes_to_string(
+                            &attribute
+                                .unescaped_value()
+                                .map_err(|e| Error::XmlQuickXmlError(e))?,
+                        )?),
                     );
                 }
 
