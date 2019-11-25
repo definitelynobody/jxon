@@ -18,7 +18,7 @@ fn write_value(writer: &mut Writer<Cursor<Vec<u8>>>, value: Value) -> Result<(),
         Value::Number(_) => return Err(Error::JsonParseUnexpectedNumber),
         Value::String(string) => {
             writer
-                .write_event(Event::Text(BytesText::from_escaped_str(&string)))
+                .write_event(Event::Text(BytesText::from_plain_str(&string)))
                 .map_err(|e| Error::XmlQuickXmlError(e))?;
         }
         Value::Array(_) => return Err(Error::JsonParseUnexpectedArray),

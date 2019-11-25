@@ -51,10 +51,10 @@ fn text() {
     );
 
     check(
-        r#"<root>"</root>"#,
+        r#"<root>&amp;</root>"#,
         json!({
             "root": [{
-                "_": "\""
+                "_": "&"
             }]
         }),
     );
@@ -62,15 +62,15 @@ fn text() {
     check_different_xml(
         r#"
 <root>
-    <something>"</something>
+    <something>&amp;</something>
 </root>
 "#,
-        r#"<root><something>"</something></root>"#,
+        r#"<root><something>&amp;</something></root>"#,
         json!({
             "root": [{
                 "something": [
                     {
-                        "_": "\""
+                        "_": "&"
                     }
                 ]
             }]
