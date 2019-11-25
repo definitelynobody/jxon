@@ -6,6 +6,10 @@ use quick_xml::{
 use serde_json::{Map, Value};
 use std::io::BufRead;
 
+fn is_string_whitespace(string: &str) -> bool {
+    string.find(|c: char| !c.is_whitespace()).is_none()
+}
+
 fn parse_tag<B: BufRead>(
     reader: &mut Reader<B>,
     buf: &mut Vec<u8>,
@@ -69,7 +73,7 @@ fn parse_tag<B: BufRead>(
                     .unescape_and_decode(&reader)
                     .map_err(|e| Error::XmlQuickXmlError(e))?;
 
-                if string.len() == 0 {
+                if is_string_whitespace(&string) {
                     continue;
                 }
 

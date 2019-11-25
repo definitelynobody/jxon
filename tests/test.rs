@@ -2,6 +2,10 @@ use jxon::{json_to_xml, xml_to_json};
 use serde_json::{json, Value};
 
 fn check(xml: &str, expected_json: Value) {
+    check_different_xml(xml, xml, expected_json);
+}
+
+fn check_different_xml(xml: &str, xml_transformed: &str, expected_json: Value) {
     let json_value = xml_to_json(xml).expect("xml to json").to_string();
     assert_eq!(
         json_value,
@@ -10,7 +14,7 @@ fn check(xml: &str, expected_json: Value) {
     );
     assert_eq!(
         json_to_xml(&json_value, None).expect("json to xml"),
-        xml,
+        xml_transformed,
         "converting json to xml"
     );
 }
@@ -51,6 +55,24 @@ fn text() {
         json!({
             "root": [{
                 "_": "\""
+            }]
+        }),
+    );
+
+    check_different_xml(
+        r#"
+<root>
+    <something>"</something>
+</root>
+"#,
+        r#"<root><something>"</something></root>"#,
+        json!({
+            "root": [{
+                "something": [
+                    {
+                        "_": "\""
+                    }
+                ]
             }]
         }),
     );
