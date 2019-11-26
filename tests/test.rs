@@ -1,4 +1,5 @@
-use jxon::{json_to_xml, xml_to_json};
+use jxon::*;
+use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
 fn check(xml: &str, expected_json: Value) {
@@ -193,4 +194,42 @@ fn decl() {
             ]
         }),
     );
+}
+
+#[test]
+fn serde() {
+    let xml = r#"<root attribute="value"><child>text</child></root>"#;
+
+    #[derive(Debug, PartialEq, Serialize, Deserialize)]
+    #[serde(deny_unknown_fields)]
+    struct Test {
+        root: Vec<Root>,
+    }
+
+    #[derive(Debug, PartialEq, Serialize, Deserialize)]
+    #[serde(deny_unknown_fields)]
+    struct Root {
+        #[serde(rename = "$attribute")]
+        attribute: String,
+        child: Vec<Child>,
+    }
+
+    #[derive(Debug, PartialEq, Serialize, Deserialize)]
+    #[serde(deny_unknown_fields)]
+    struct Child {
+        #[serde(rename = "_")]
+        content: String,
+    }
+
+    let test = Test {
+        root: vec![Root {
+            attribute: "value".to_owned(),
+            child: vec![Child {
+                content: "text".to_owned(),
+            }],
+        }],
+    };
+
+    assert_eq!(deserialize::<Test>(xml).unwrap(), test);
+    assert_eq!(serialize(test, None).unwrap(), xml);
 }
