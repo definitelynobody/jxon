@@ -33,8 +33,24 @@ fn empty_root_tag() {
 
 #[test]
 fn text() {
+    let xml = "<root>test</root>";
+    #[derive(Debug, PartialEq, Serialize, Deserialize)]
+    #[serde(deny_unknown_fields)]
+    struct Test {
+        root: Vec<TextContent<String>>,
+    }
+
+    assert_eq!(
+        deserialize::<Test>(xml).unwrap(),
+        Test {
+            root: vec![TextContent {
+                content: "test".to_owned()
+            }]
+        }
+    );
+
     check(
-        "<root>test</root>",
+        xml,
         json!({
             "root": [{
                 "_": "test"
@@ -156,8 +172,34 @@ fn children() {
 
 #[test]
 fn decl() {
+    #[derive(Debug, PartialEq, Serialize, Deserialize)]
+    #[serde(deny_unknown_fields)]
+    struct Test {
+        #[serde(rename = "#")]
+        decl: Declaration,
+        root: Vec<Root>,
+    }
+
+    #[derive(Debug, PartialEq, Serialize, Deserialize)]
+    #[serde(deny_unknown_fields)]
+    struct Root {}
+
+    let xml = r#"<?xml version="1.0"?><root/>"#;
+
+    assert_eq!(
+        deserialize::<Test>(xml).unwrap(),
+        Test {
+            decl: Declaration {
+                version: "1.0".to_owned(),
+                encoding: None,
+                standalone: None,
+            },
+            root: vec![Root {}]
+        }
+    );
+
     check(
-        r#"<?xml version="1.0"?><root/>"#,
+        xml,
         json!({
             "#": {
                 "version": "1.0"
@@ -168,8 +210,22 @@ fn decl() {
         }),
     );
 
+    let xml = r#"<?xml version="1.0" encoding="UTF-8"?><root/>"#;
+
+    assert_eq!(
+        deserialize::<Test>(xml).unwrap(),
+        Test {
+            decl: Declaration {
+                version: "1.0".to_owned(),
+                encoding: Some("UTF-8".to_owned()),
+                standalone: None,
+            },
+            root: vec![Root {}]
+        }
+    );
+
     check(
-        r#"<?xml version="1.0" encoding="UTF-8"?><root/>"#,
+        xml,
         json!({
             "#": {
                 "version": "1.0",
@@ -181,8 +237,22 @@ fn decl() {
         }),
     );
 
+    let xml = r#"<?xml version="1.0" encoding="UTF-8" standalone="no"?><root/>"#;
+
+    assert_eq!(
+        deserialize::<Test>(xml).unwrap(),
+        Test {
+            decl: Declaration {
+                version: "1.0".to_owned(),
+                encoding: Some("UTF-8".to_owned()),
+                standalone: Some("no".to_owned()),
+            },
+            root: vec![Root {}]
+        }
+    );
+
     check(
-        r#"<?xml version="1.0" encoding="UTF-8" standalone="no"?><root/>"#,
+        xml,
         json!({
             "#": {
                 "version": "1.0",
