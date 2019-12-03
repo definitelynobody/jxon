@@ -35,10 +35,10 @@ impl fmt::Display for Error {
             }
             Error::JsonParseExpectedArray => write!(f, "json parse error: expected an array"),
             Error::JsonParseExpectedObject => write!(f, "json parse error: expected an object"),
-            Error::JsonParseUnexpectedArray => write!(f, "json parse error: unexpected an array"),
-            Error::JsonParseUnexpectedNull => write!(f, "json parse error: unexpected an null"),
-            Error::JsonParseUnexpectedBool => write!(f, "json parse error: unexpected an bool"),
-            Error::JsonParseUnexpectedNumber => write!(f, "json parse error: unexpected an number"),
+            Error::JsonParseUnexpectedArray => write!(f, "json parse error: unexpected array"),
+            Error::JsonParseUnexpectedNull => write!(f, "json parse error: unexpected null"),
+            Error::JsonParseUnexpectedBool => write!(f, "json parse error: unexpected bool"),
+            Error::JsonParseUnexpectedNumber => write!(f, "json parse error: unexpected number"),
             Error::JsonParseDeclMissingVersion => {
                 write!(f, "json parse error: missing xml version")
             }
